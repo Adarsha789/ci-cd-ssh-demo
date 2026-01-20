@@ -1,0 +1,26 @@
+name: SSH Deploy Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd ~/deploy
+            if [ -d "ci-cd-ssh-demo" ]; then
+              cd ci-cd-ssh-demo
+              git pull origin main
+            else
+              git clone git@github.com:Adarsha789/ci-cd-ssh-demo.git
+            fi
